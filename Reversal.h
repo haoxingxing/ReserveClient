@@ -11,6 +11,7 @@ public:
 	~Reversal();
 	void Run();
 	void recv();
+
 private:
 	QTcpSocket* rs;
 	QTcpSocket* obj;
