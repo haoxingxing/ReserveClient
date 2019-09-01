@@ -71,3 +71,6 @@ Thumbs.db
 *.dll
 *.exe
 
+/.vs/ReserveProxyClient/v16
+/debug
+/release
