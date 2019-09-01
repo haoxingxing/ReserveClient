@@ -36,9 +36,9 @@ void Reversal::recv()
 		rs->disconnect();
 		obj = new QTcpSocket;
 		connect(obj, &QTcpSocket::disconnected, &loop, [&] {loop.exit(false); });
-		connect(obj, &QTcpSocket::readyRead, &loop, [&] {loop.exit(true); },);
+		connect(obj, &QTcpSocket::readyRead, &loop, [&] {loop.exit(true); });
 		connect(rs, &QTcpSocket::disconnected, &loop, [&] {loop.exit(false); });
-		connect(rs, &QTcpSocket::readyRead, &loop, [&] {loop.exit(true); },Qt::DirectConnection);
+		connect(rs, &QTcpSocket::readyRead, &loop, [&] {loop.exit(true); });
 		connect(obj, &QTcpSocket::connected, &loop, [&] {qDebug().nospace() << key << ": successfully connected to the object"; });
 		obj->connectToHost(obj_adr, obj_port);
 		obj->waitForConnected();
