@@ -14,13 +14,13 @@ Reversal::~Reversal()
 void Reversal::Run()
 {
 	rs = new QTcpSocket;	
-	connect(rs, &QTcpSocket::readyRead, this, &Reversal::recv);
 	connect(rs, &QTcpSocket::connected, this, [&]
 	{
 
 			qDebug().nospace() << key << ": successfully connected to the remote";
 			rs->write("connect " + key.toLocal8Bit() + ".");
 			rs->flush();
+			this->recv();
 	});
 	rs->connectToHost(rs_adr,rs_port);
 	
@@ -28,10 +28,6 @@ void Reversal::Run()
 
 void Reversal::recv()
 {
-	if(rs->canReadLine())
-	{
-		auto x = rs->readLine();
-		qDebug().nospace() << key << x;
 		QEventLoop loop;
 		rs->disconnect();
 		obj = new QTcpSocket;
@@ -56,18 +52,20 @@ void Reversal::recv()
 			qDebug().nospace() << key << ": successfully connected to the object";
 		});
 		obj->connectToHost(obj_adr, obj_port);
+		obj->waitForConnected();
+		QByteArray a;
 		while(loop.exec())
 		{
-			std::cout << "+";
-			rs->write(obj->readAll());
-			obj->write(rs->readAll());
+			rs->write(a=obj->readAll());
+			//qDebug() << "c->s " << a;
+			obj->write(a=rs->readAll());
+			//qDebug() << "s->c " << a;
 			rs->flush();
 			obj->flush();
+			std::cout << "+";
 		}
 		rs->disconnect();
 		obj->disconnect();
-		loop.disconnect();
 		obj->disconnectFromHost();
 		rs->disconnectFromHost();
-	}
 }

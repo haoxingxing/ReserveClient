@@ -25,6 +25,7 @@ void Controller::Run()
 
 Controller::~Controller()
 {
+	send("close 0");
 }
 
 void Controller::addNode(QString object, qintptr port_obj, qintptr port_remote)
